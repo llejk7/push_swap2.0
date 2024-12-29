@@ -6,37 +6,42 @@
 /*   By: kjell <kjell@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 21:03:09 by kjell             #+#    #+#             */
-/*   Updated: 2024/12/29 22:01:06 by kjell            ###   ########.fr       */
+/*   Updated: 2024/12/29 23:58:57 by kjell            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/push_swap.h"
-#include <stdio.h> // For debugging (optional)
+#include <limits.h>  // For INT_MAX and INT_MIN
 
-// Utility function to check if a string is a valid integer
-#include <limits.h>
-
+/**
+ * is_valid_int - Checks if a string represents a valid integer.
+ * @str: The input string to validate.
+ *
+ * Returns 1 if the string is a valid integer, 0 otherwise.
+ */
 int is_valid_int(const char *str)
 {
-    long num;
-    int sign;
+    long num = 0;
+    int sign = 1;
 
-    num = 0;
-    sign = 1;
-
+    // Skip leading whitespaces
     while (*str == ' ' || *str == '\t' || *str == '\n'
-        || *str == '\r' || *str == '\v' || *str == '\f')
-    {
+           || *str == '\r' || *str == '\v' || *str == '\f')
         str++;
-    }
+
+    // Handle optional sign
     if (*str == '-' || *str == '+')
     {
         if (*str == '-')
             sign = -1;
         str++;
     }
+
+    // Check if there are any digits
     if (!*str)
         return (0);
+
+    // Parse digits and check for overflow
     while (*str)
     {
         if (*str < '0' || *str > '9')
@@ -49,42 +54,49 @@ int is_valid_int(const char *str)
     return (1);
 }
 
-// Utility function to check for duplicates
+/**
+ * has_duplicate - Checks if a value already exists in the stack.
+ * @stack: The stack to check for duplicates.
+ * @value: The value to check.
+ *
+ * Returns 1 if a duplicate is found, 0 otherwise.
+ */
 int has_duplicate(t_stack *stack, int value)
 {
-    t_node *current;
+    t_node *current = stack->top;
 
-    current = stack->top;
     while (current)
     {
         if (current->value == value)
-        {
-            printf("Duplicate found: %d\n", value);
             return (1);
-        }
         current = current->next;
     }
     return (0);
 }
 
-// Add a value to the stack
+/**
+ * add_to_stack - Adds a value to the top of the stack.
+ * @stack: The stack to add the value to.
+ * @value: The value to add.
+ */
 void add_to_stack(t_stack *stack, int value)
 {
     t_node *new_node = malloc(sizeof(t_node));
     if (!new_node)
-    {
-        printf("Memory allocation failed for value: %d\n", value); // Debugging
-        error_exit();
-    }
+        error_exit();  // Handle memory allocation failure
 
     new_node->value = value;
     new_node->next = stack->top;
     stack->top = new_node;
     stack->size++;
-
-    printf("Stack size after addition: %d\n", stack->size); // Debugging
 }
 
+/**
+ * is_sorted - Checks if the stack is sorted in ascending order.
+ * @stack: The stack to check.
+ *
+ * Returns 1 if sorted, 0 otherwise.
+ */
 int is_sorted(t_stack *stack)
 {
     t_node *current = stack->top;
@@ -98,34 +110,28 @@ int is_sorted(t_stack *stack)
     return (1);
 }
 
-// Parse and validate input
+/**
+ * parse_input - Parses and validates command-line arguments, adding them to stack_a.
+ * @argc: The argument count.
+ * @argv: The argument vector.
+ * @stack_a: The stack to populate with parsed values.
+ */
 void parse_input(int argc, char **argv, t_stack *stack_a)
 {
-    int value;
+    int parsed_value;
 
     if (argc < 2)
-    {
-        printf("No input provided\n");
-        exit(0);
-    }
+        exit(0);  // No input provided; exit silently
 
     for (int i = argc - 1; i > 0; i--)
     {
-        printf("Parsing argument: %s\n", argv[i]);
         if (!is_valid_int(argv[i]))
-        {
-            printf("Invalid integer detected: %s\n", argv[i]);
-            error_exit();
-        }
+            error_exit();  // Invalid integer detected
 
-        value = atoi(argv[i]);
-        if (has_duplicate(stack_a, value))
-        {
-            printf("Duplicate detected: %d\n", value);
-            error_exit();
-        }
+        parsed_value = atoi(argv[i]);
+        if (has_duplicate(stack_a, parsed_value))
+            error_exit();  // Duplicate value detected
 
-        printf("Adding to stack_a: %d\n", value);
-        add_to_stack(stack_a, value);
+        add_to_stack(stack_a, parsed_value);
     }
 }
