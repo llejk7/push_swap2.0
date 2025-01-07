@@ -23,7 +23,9 @@ SRCS        = src/main.c \
               src/utils/assign_indices.c \
               src/utils/error_handling.c \
               src/utils/get_max_bits.c \
-              src/utils/input_validation.c
+              src/utils/input_validation.c \
+              src/utils/parse_input.c \
+              src/utils/validation_utils.c
 
 # Object files
 OBJS        = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)

@@ -6,7 +6,7 @@
 /*   By: krenken <krenken@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 20:45:52 by kjell             #+#    #+#             */
-/*   Updated: 2025/01/07 21:58:19 by krenken          ###   ########.fr       */
+/*   Updated: 2025/01/07 22:44:30 by krenken          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,9 @@ int					get_max_bits(t_stack *stack);
 void				assign_indices(t_stack *stack_a);
 void				hybrid_sort(t_stack *stack_a, t_stack *stack_b);
 void				print_stack(t_stack *stack, const char *stack_name);
+void				parse_argument(const char *arg, t_stack *stack_a);
+int					has_duplicate(t_stack *stack, int value);
+void				add_to_stack(t_stack *stack, int value);
+int					is_sorted(t_stack *stack);
 
 #endif
